@@ -1,0 +1,31 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="CurrentTemp">
+        <item name="android:textColor">@color/colorCurrentTemperature</item>
+        <item name="android:textSize">@dimen/currentTempTextFontSize</item>
+        <item name="android:fontFamily">@font/roboto_black</item>
+    </style>
+
+    <style name="LocationText">
+        <item name="android:textColor">@color/colorLocation</item>
+        <item name="android:textSize">@dimen/loicationTextFontSize</item>
+        <item name="android:fontFamily">@font/roboto_thin</item>
+        <item name="android:layout_marginBottom">@dimen/marginLocationBottom</item>
+    </style>
+
+    <style name="ForecastText">
+        <item name="android:textColor">@color/colorLocation</item>
+        <item name="android:textSize">@dimen/forecastTextFontSize</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+</resources>
