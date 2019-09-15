@@ -1,4 +1,4 @@
-package com.pradip.weatherapp.utils
+package com.pradip.weatherapp.common
 
 /**
  *  Created by Pradip Awasthi on 2019-09-14.

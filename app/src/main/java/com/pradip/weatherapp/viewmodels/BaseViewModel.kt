@@ -1,7 +1,7 @@
 package com.pradip.weatherapp.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.pradip.weatherapp.utils.Outcome
+import com.pradip.weatherapp.common.Outcome
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import java.net.HttpURLConnection

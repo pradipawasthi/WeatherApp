@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.pradip.weatherapp.R
+import com.pradip.weatherapp.common.getDayNameFromDate
 import com.pradip.weatherapp.dataModel.ForecastdayDataModel
 import com.pradip.weatherapp.databinding.ItemForecastviewBinding
+import kotlin.math.roundToInt
 
 
 class ForecastDaysAdapter : RecyclerView.Adapter<ForecastDaysAdapter.ViewHolder>() {
@@ -37,11 +39,11 @@ class ForecastDaysAdapter : RecyclerView.Adapter<ForecastDaysAdapter.ViewHolder>
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ForecastdayDataModel) {
-            binding.dailyForecast = item
             binding.executePendingBindings()
+            binding.itemTextView.text = getDayNameFromDate(item.date)
             binding.itemTextViewValue.text = binding.root.context.getString(
                 R.string.string_forecast,
-                item.day.avgtempC.toString()
+                item.day.avgtempC.roundToInt().toString()
             )
 
         }

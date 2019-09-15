@@ -20,12 +20,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.pradip.weatherapp.BuildConfig.APPLICATION_ID
 import com.pradip.weatherapp.R
+import com.pradip.weatherapp.common.observeK
+import com.pradip.weatherapp.common.setVisibleState
 import com.pradip.weatherapp.dataModel.WeatherForecastDataModel
-import com.pradip.weatherapp.utils.observeK
-import com.pradip.weatherapp.utils.setVisibleState
 import com.pradip.weatherapp.viewmodels.MainViewModel
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.error_message.*
 import kotlinx.android.synthetic.main.image_loader.*
 import java.util.*
 import javax.inject.Inject
@@ -52,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         setUpObserver()
+        setListeners()
+
 
     }
 
@@ -80,6 +83,12 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setUpRecyclerView()
 
+    }
+
+    private fun setListeners() {
+        btnRetry.setOnClickListener {
+            getLastLocation()
+        }
     }
 
 
@@ -193,7 +202,7 @@ class MainActivity : AppCompatActivity() {
             getString(
                 R.string.string_current_temp,
                 weatherForecastDataModel.current.tempC.toString()
-            )   //weatherForecastDataModel.current.tempC.toString()
+            )
         tvLocation.text = weatherForecastDataModel.location.name
         weatherForecastDataModel.forecast.forecastday?.let { forecastDaysAdapter.updateData(it) }
 

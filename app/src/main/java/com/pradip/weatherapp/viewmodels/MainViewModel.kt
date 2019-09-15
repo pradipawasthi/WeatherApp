@@ -7,8 +7,8 @@ import com.pradip.domain.entities.WeatherForecastEntity
 import com.pradip.weatherapp.dataModel.WeatherForecastDataModel
 import com.pradip.weatherapp.mapper.WeatherForecastDataMapper
 import com.pradip.weatherapp.plus
-import com.pradip.weatherapp.utils.Outcome
-import com.pradip.weatherapp.utils.applyIoToMainSchedulerOnSingle
+import com.pradip.weatherapp.common.Outcome
+import com.pradip.weatherapp.common.applyIoToMainSchedulerOnSingle
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import java.net.HttpURLConnection

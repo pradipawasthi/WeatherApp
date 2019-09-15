@@ -1,4 +1,4 @@
-package com.pradip.weatherapp.utils
+package com.pradip.weatherapp.common
 
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

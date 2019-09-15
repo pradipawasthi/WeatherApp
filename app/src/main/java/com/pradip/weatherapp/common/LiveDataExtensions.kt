@@ -1,4 +1,4 @@
-package com.pradip.weatherapp.utils
+package com.pradip.weatherapp.common
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
