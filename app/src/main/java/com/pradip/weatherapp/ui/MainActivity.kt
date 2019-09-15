@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ import com.pradip.weatherapp.BuildConfig.APPLICATION_ID
 import com.pradip.weatherapp.R
 import com.pradip.weatherapp.viewmodels.MainViewModel
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.image_loader.*
 import java.util.*
 import javax.inject.Inject
 
@@ -83,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful && task.result != null) {
                     getCityName(task.result!!.latitude, task.result!!.longitude)
                 } else {
-                    Log.w(TAG, "getLastLocation:exception", task.exception)
                     Log.d(TAG, "no_location_detected")
                 }
             }
@@ -166,5 +167,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun showProgresBar() {
+        val aniRotate =
+            AnimationUtils.loadAnimation(applicationContext, R.anim.image_rotation)
+        ivLoader.startAnimation(aniRotate)
     }
 }

@@ -11,6 +11,18 @@
 
     <color name="colorForecast">#2A2A2A</color>
 
+    <color name="topbar">#22000000</color>
+
+    <color name="colorErrorMsg">#FFFFFF</color>
+
+    <color name="colorErrorMsgBackGround">#E85959</color>
+
+    <color name="colorRetryBg">#4A4A4A</color>
+
+
+
+
+
 
 
 

@@ -28,4 +28,19 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
+
+    <style name="HeaderTheme">
+        <item name="android:textColor">@color/colorLocation</item>
+        <item name="android:textSize">@dimen/forecastTextFontSize</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+
+    <style name="ErrorTheme">
+        <item name="android:textColor">@color/colorErrorMsg</item>
+        <item name="android:textSize">@dimen/errorTextFontSize</item>
+        <item name="android:fontFamily">@font/roboto_thin</item>
+    </style>
+
+
 </resources>
