@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
@@ -250,6 +252,8 @@ class MainActivity : AppCompatActivity() {
     private fun setUpRecyclerView() {
         forecastDaysAdapter = ForecastDaysAdapter()
         forecastItem.adapter = forecastDaysAdapter
+        forecastItem.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+
 
     }
 }
