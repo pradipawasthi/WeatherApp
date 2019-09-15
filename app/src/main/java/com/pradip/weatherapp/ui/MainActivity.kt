@@ -20,8 +20,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.pradip.weatherapp.BuildConfig.APPLICATION_ID
 import com.pradip.weatherapp.R
+import com.pradip.weatherapp.dataModel.WeatherForecastDataModel
+import com.pradip.weatherapp.utils.observeK
+import com.pradip.weatherapp.utils.setVisibleState
 import com.pradip.weatherapp.viewmodels.MainViewModel
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.image_loader.*
 import java.util.*
 import javax.inject.Inject
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var forecastDaysAdapter: ForecastDaysAdapter
 
     companion object {
         private const val TAG = "MainActivity"
@@ -60,11 +65,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpObserver() {
 
+        viewModel.getWeatherForecastData.observeK(
+            this,
+            ::onSuccess,
+            ::onApiError,
+            ::unAuthorizeUserError,
+            ::ioExceptionHandler,
+            ::updateProgressBarState
+        )
     }
 
     private fun init() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        setUpRecyclerView()
 
     }
 
@@ -169,9 +183,64 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgresBar() {
+
+    private fun onSuccess(weatherForecastDataModel: WeatherForecastDataModel) {
+        updateData(weatherForecastDataModel)
+    }
+
+    private fun updateData(weatherForecastDataModel: WeatherForecastDataModel) {
+        tvTemperature.text =
+            getString(
+                R.string.string_current_temp,
+                weatherForecastDataModel.current.tempC.toString()
+            )   //weatherForecastDataModel.current.tempC.toString()
+        tvLocation.text = weatherForecastDataModel.location.name
+        weatherForecastDataModel.forecast.forecastday?.let { forecastDaysAdapter.updateData(it) }
+
+
+    }
+
+    private fun showProgressBar() {
         val aniRotate =
             AnimationUtils.loadAnimation(applicationContext, R.anim.image_rotation)
         ivLoader.startAnimation(aniRotate)
+    }
+
+    private fun unAuthorizeUserError() {
+        showErrorView()
+    }
+
+
+    private fun onApiError() {
+        showErrorView()
+    }
+
+    private fun updateProgressBarState(state: Boolean) {
+        progressBar.setVisibleState(state)
+        rootConstraint.setVisibleState(!state)
+        appbar.setVisibleState(!state)
+        if (state) {
+            showProgressBar()
+        }
+
+    }
+
+    private fun ioExceptionHandler() {
+        showErrorView()
+    }
+
+
+    private fun showErrorView() {
+        errorView.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+        rootConstraint.visibility = View.GONE
+        appbar.visibility = View.GONE
+
+    }
+
+    private fun setUpRecyclerView() {
+        forecastDaysAdapter = ForecastDaysAdapter()
+        forecastItem.adapter = forecastDaysAdapter
+
     }
 }

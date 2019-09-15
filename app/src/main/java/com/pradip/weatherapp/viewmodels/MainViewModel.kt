@@ -1,6 +1,5 @@
 package com.pradip.weatherapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.doubtnutapp.domain.similarVideo.interactor.GetWeatherForecastUseCase
@@ -8,8 +7,11 @@ import com.pradip.domain.entities.WeatherForecastEntity
 import com.pradip.weatherapp.dataModel.WeatherForecastDataModel
 import com.pradip.weatherapp.mapper.WeatherForecastDataMapper
 import com.pradip.weatherapp.plus
+import com.pradip.weatherapp.utils.Outcome
 import com.pradip.weatherapp.utils.applyIoToMainSchedulerOnSingle
 import io.reactivex.disposables.CompositeDisposable
+import retrofit2.HttpException
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -27,12 +29,12 @@ class MainViewModel @Inject constructor(
     }
 
 
-    private val _getWeatherForecast = MutableLiveData<WeatherForecastDataModel>()
-    val getWeatherForecast: LiveData<WeatherForecastDataModel>
-        get() = _getWeatherForecast
+    private val _getWeatherForecastData = MutableLiveData<Outcome<WeatherForecastDataModel>>()
+    val getWeatherForecastData: LiveData<Outcome<WeatherForecastDataModel>>
+        get() = _getWeatherForecastData
 
     fun getWeatherforeCast(city: String, latitude: Double, longitude: Double) {
-
+        _getWeatherForecastData.value = Outcome.loading(true)
         compositeDisposable + getWeatherForecastUseCase
             .execute(GetWeatherForecastUseCase.Param(city, latitude, longitude, PAGE))
             .applyIoToMainSchedulerOnSingle()
@@ -43,17 +45,27 @@ class MainViewModel @Inject constructor(
 
     private fun onSuccess(weatherForecastEntity: WeatherForecastEntity) {
 
+        _getWeatherForecastData.value = Outcome.loading(false)
         val weatherForecastData = weatherForecastEntity.run {
             weatherForecastDataMapper.map(weatherForecastEntity)
         }
-        Log.d("errorRequest", "success.toString()")
 
+        _getWeatherForecastData.value = Outcome.success(weatherForecastData)
     }
 
 
     private fun onError(error: Throwable) {
-        Log.d("errorRequest", error.toString())
-
+        _getWeatherForecastData.value = Outcome.loading(false)
+        _getWeatherForecastData.value = if (error is HttpException) {
+            when (error.response().code()) {
+                HttpURLConnection.HTTP_UNAUTHORIZED -> Outcome.BadRequest(error.message ?: "")
+                HttpURLConnection.HTTP_BAD_REQUEST -> Outcome.ApiError(error)
+                //TODO socket time out exception msg should be "Timeout while fetching the data"
+                else -> Outcome.Failure(error)
+            }
+        } else {
+            Outcome.Failure(error)
+        }
     }
 
 }
