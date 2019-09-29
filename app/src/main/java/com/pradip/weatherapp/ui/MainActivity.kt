@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,7 @@ import com.pradip.weatherapp.R
 import com.pradip.weatherapp.common.observeK
 import com.pradip.weatherapp.common.setVisibleState
 import com.pradip.weatherapp.dataModel.WeatherForecastDataModel
+import com.pradip.weatherapp.isInternetConnected
 import com.pradip.weatherapp.viewmodels.MainViewModel
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -56,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         init()
         setUpObserver()
         setListeners()
-
-
     }
 
     private fun getWeatherForecast(
@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity() {
     private fun setListeners() {
         btnRetry.setOnClickListener {
             getLastLocation()
+            showView()
+
         }
     }
 
@@ -108,9 +110,22 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient.lastLocation
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful && task.result != null) {
-                    getCityName(task.result!!.latitude, task.result!!.longitude)
+                    if (isInternetConnected(this)) {
+                        getCityName(
+                            task.result!!.latitude,
+                            task.result!!.longitude
+                        )
+                    } else {
+                        Toast.makeText(this@MainActivity, "no_location_detected", Toast.LENGTH_LONG)
+                            .show()
+                        showNetworkError()
+                    }
+
                 } else {
                     Log.d(TAG, "no_location_detected")
+                    Toast.makeText(this@MainActivity, "no_location_detected", Toast.LENGTH_LONG)
+                        .show()
+                    showNetworkError()
                 }
             }
     }
@@ -228,8 +243,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateProgressBarState(state: Boolean) {
         progressBar.setVisibleState(state)
-        rootConstraint.setVisibleState(!state)
-        appbar.setVisibleState(!state)
+        rootView.setVisibleState(!state)
         if (state) {
             showProgressBar()
         }
@@ -244,9 +258,20 @@ class MainActivity : AppCompatActivity() {
     private fun showErrorView() {
         errorView.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
-        rootConstraint.visibility = View.GONE
-        appbar.visibility = View.GONE
+        rootView.visibility = View.GONE
 
+    }
+
+    fun showNetworkError() {
+        errorView.setVisibleState(true)
+        errorText.text = getString(R.string.check_your_internet)
+        rootView.setVisibleState(false)
+    }
+
+    fun showView() {
+        errorView.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        rootView.visibility = View.VISIBLE
     }
 
     private fun setUpRecyclerView() {
